@@ -1,0 +1,86 @@
+<main class="main-content" style="min-height: 100vh; background-color: #f5f7fa; padding: 20px;">
+  <div class="container" style="max-width: 1200px; background: #ffffff; padding: 40px; border-radius: 10px; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);">
+    <!-- Page Header -->
+    <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+      <h1 style="font-size: 2.5rem; font-weight: bold; color: #333;">Hotel Reports</h1>
+      <a href="/hotel-booking/reports/export" class="btn btn-primary" style="background-color: #4CAF50; padding: 10px 20px; border-radius: 10px; color: #fff; font-size: 1rem; text-decoration: none;">
+        Export Reports
+      </a>
+    </div>
+
+    <!-- Filters Section -->
+    <div class="filters" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <div style="display: flex; align-items: center; gap: 15px;">
+        <label for="fromDate" style="font-size: 1rem; font-weight: bold;">From:</label>
+        <input 
+          type="date" 
+          id="fromDate" 
+          class="form-control" 
+          style="padding: 10px; border-radius: 10px; border: 1px solid #ddd;" 
+        />
+        <label for="toDate" style="font-size: 1rem; font-weight: bold;">To:</label>
+        <input 
+          type="date" 
+          id="toDate" 
+          class="form-control" 
+          style="padding: 10px; border-radius: 10px; border: 1px solid #ddd;" 
+        />
+        <button 
+          onclick="filterReports()" 
+          class="btn btn-success" 
+          style="padding: 10px 20px; border-radius: 10px; font-size: 1rem; background-color: #4CAF50; color: #fff;">
+          Filter
+        </button>
+      </div>
+    </div>
+
+    <!-- Reports Table -->
+    <section class="reports">
+      <table class="table" style="width: 100%; border-collapse: collapse; background: #ffffff; border-radius: 10px; overflow: hidden;">
+        <thead style="background-color: #4CAF50; color: #fff;">
+          <tr>
+            <th style="padding: 15px; text-align: left;">Hotel Name</th>
+            <th style="padding: 15px; text-align: left;">Rooms Booked</th>
+            <th style="padding: 15px; text-align: left;">Revenue</th>
+            <th style="padding: 15px; text-align: left;">Total Guests</th>
+            <th style="padding: 15px; text-align: left;">Report Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (hotelReports && hotelReports.length > 0) { %>
+            <% hotelReports.forEach((report) => { %>
+              <tr style="border-bottom: 1px solid #ddd;">
+                <td style="padding: 15px;"><%= report.hotelName %></td>
+                <td style="padding: 15px;"><%= report.roomsBooked %></td>
+                <td style="padding: 15px;">$<%= report.revenue.toFixed(2) %></td>
+                <td style="padding: 15px;"><%= report.totalGuests %></td>
+                <td style="padding: 15px;"><%= new Date(report.reportDate).toLocaleDateString() %></td>
+              </tr>
+            <% }); %>
+          <% } else { %>
+            <tr>
+              <td colspan="5" style="padding: 15px; text-align: center; color: #999;">
+                No reports available for the selected date range.
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</main>
+
+<script>
+function filterReports() {
+  const fromDate = document.getElementById('fromDate').value;
+  const toDate = document.getElementById('toDate').value;
+
+  if (!fromDate || !toDate) {
+    alert('Please select both from and to dates.');
+    return;
+  }
+
+  const url = `/hotel-booking/report-hotel?from=${fromDate}&to=${toDate}`;
+  window.location.href = url;
+}
+</script>

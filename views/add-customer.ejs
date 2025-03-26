@@ -1,0 +1,129 @@
+<main class="main-content" style="min-height: 100vh; background-color: #f5f7fa; padding: 20px;">
+  <div class="container" style="max-width: 600px; background: #ffffff; padding: 40px; border-radius: 15px; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);">
+    <!-- Page Header -->
+    <div class="page-header" style="text-align: center; margin-bottom: 40px;">
+      <h1 style="font-size: 2.5rem; font-weight: bold; color: #333;">Add Customer</h1>
+      <p style="font-size: 1.2rem; color: #777;">Enter the details of the new customer below.</p>
+    </div>
+
+    <!-- Add Customer Form -->
+    <form action="/hotel-booking/customers/add-customer" method="POST" style="margin-top: 30px;">
+      <!-- Name Field -->
+      <div class="form-group" style="margin-bottom: 20px;">
+        <label for="name" style="font-weight: bold; font-size: 1.2rem;">Full Name</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          class="form-control"
+          placeholder="Enter Full Name"
+          required
+          style="padding: 15px; border-radius: 10px; border: 1px solid #ddd; font-size: 1rem; width: 100%;"
+        />
+      </div>
+
+      <!-- Email Field -->
+      <div class="form-group" style="margin-bottom: 20px;">
+        <label for="email" style="font-weight: bold; font-size: 1.2rem;">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="form-control"
+          placeholder="Enter Email Address"
+          required
+          style="padding: 15px; border-radius: 10px; border: 1px solid #ddd; font-size: 1rem; width: 100%;"
+        />
+      </div>
+
+      <!-- Phone Field -->
+      <div class="form-group" style="margin-bottom: 20px;">
+        <label for="phone" style="font-weight: bold; font-size: 1.2rem;">Phone Number</label>
+        <input
+          type="text"
+          id="phone"
+          name="phone"
+          class="form-control"
+          placeholder="Enter Phone Number"
+          required
+          style="padding: 15px; border-radius: 10px; border: 1px solid #ddd; font-size: 1rem; width: 100%;"
+        />
+      </div>
+
+      <!-- Room Number -->
+      <div class="form-group" style="margin-bottom: 15px;">
+        <label for="roomNumber" style="font-size: 1rem; font-weight: bold;">Room Number</label>
+        <select 
+          id="roomNumber" 
+          name="roomNumber" 
+          class="form-control" 
+          required 
+          style="padding: 10px; border-radius: 10px; border: 1px solid #ddd; width: 100%;"
+        >
+          <option value="" disabled selected>Select Room</option>
+          <% rooms.forEach(room => { %>
+            <option value="<%= room.roomNumber %>">
+              Room <%= room.roomNumber %> - <%= room.type %> - <%= room.hotel %> - $<%= room.price.toFixed(2) %>
+            </option>
+          <% }) %>
+        </select>
+      </div>
+
+
+      <!-- Check-in Date -->
+      <div class="form-group" style="margin-bottom: 20px;">
+        <label for="checkInDate" style="font-weight: bold; font-size: 1.2rem;">Check-in Date</label>
+        <input
+          type="date"
+          id="checkInDate"
+          name="checkInDate"
+          class="form-control"
+          required
+          style="padding: 15px; border-radius: 10px; border: 1px solid #ddd; font-size: 1rem; width: 100%;"
+        />
+      </div>
+
+      <!-- Check-out Date -->
+      <div class="form-group" style="margin-bottom: 20px;">
+        <label for="checkOutDate" style="font-weight: bold; font-size: 1.2rem;">Check-out Date</label>
+        <input
+          type="date"
+          id="checkOutDate"
+          name="checkOutDate"
+          class="form-control"
+          required
+          style="padding: 15px; border-radius: 10px; border: 1px solid #ddd; font-size: 1rem; width: 100%;"
+        />
+      </div>
+
+      <!-- Status Field -->
+      <div class="form-group" style="margin-bottom: 20px;">
+        <label for="status" style="font-weight: bold; font-size: 1.2rem;">Status</label>
+        <select
+          id="status"
+          name="status"
+          class="form-control"
+          required
+          style="padding: 15px; border-radius: 10px; border: 1px solid #ddd; font-size: 1rem; width: 100%;"
+        >
+          <option value="Active">Active</option>
+          <option value="Completed">Completed</option>
+          <option value="Cancelled">Cancelled</option>
+        </select>
+      </div>
+
+      <!-- Submit Button -->
+      <div style="text-align: center;">
+        <button
+          type="submit"
+          class="btn btn-primary"
+          style="background-color: #4CAF50; border: none; padding: 12px 25px; font-size: 1rem; border-radius: 10px; color: #fff; font-weight: bold; transition: background-color 0.3s ease;"
+          onmouseover="this.style.backgroundColor='#45a049';"
+          onmouseout="this.style.backgroundColor='#4CAF50';"
+        >
+          Add Customer
+        </button>
+      </div>
+    </form>
+  </div>
+</main>

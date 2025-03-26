@@ -1,0 +1,165 @@
+<main class="main-content" style="min-height: 100vh; background-color: #f5f7fa; padding: 20px;">
+    <div class="container" style="max-width: 800px; background-color: #ffffff; padding: 40px; border-radius: 15px; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);">
+  
+      <!-- Page Header -->
+      <div style="text-align: center; margin-bottom: 30px;">
+        <h1 style="font-size: 2.5rem; font-weight: bold; color: #333;">Edit Reservation</h1>
+      </div>
+  
+      <!-- Edit Reservation Form -->
+      <form action="/parking-management/reservations/<%= reservation._id %>/edit" method="POST" id="reservationForm">
+  
+        <!-- Reservation ID (Read-only) -->
+        <div class="form-group" style="margin-bottom: 15px;">
+          <label for="reservationID" style="font-weight: bold;">Reservation ID</label>
+          <input 
+            type="text" 
+            id="reservationID" 
+            name="reservationID" 
+            value="<%= reservation.reservationID %>" 
+            class="form-control" 
+            readonly
+            style="padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
+        </div>
+  
+        <!-- Customer Name -->
+        <div class="form-group" style="margin-bottom: 15px;">
+          <label for="customerName" style="font-weight: bold;">Customer Name</label>
+          <input 
+            type="text" 
+            id="customerName" 
+            name="customerName" 
+            value="<%= reservation.customerName %>"
+            class="form-control" 
+            required 
+            style="padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
+        </div>
+  
+        <!-- Number Plate -->
+        <div class="form-group" style="margin-bottom: 15px;">
+          <label for="numberPlate" style="font-weight: bold;">Vehicle Number Plate</label>
+          <input 
+            type="text" 
+            id="numberPlate" 
+            name="numberPlate" 
+            value="<%= reservation.numberPlate %>"
+            class="form-control" 
+            required 
+            style="padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
+        </div>
+  
+        <!-- Parking Lot Selection -->
+        <div class="form-group" style="margin-bottom: 15px;">
+          <label for="parkingLot" style="font-weight: bold;">Select Parking Lot</label>
+          <select 
+            id="parkingLot" 
+            name="parkingLot" 
+            class="form-control" 
+            required 
+            style="padding: 10px; border-radius: 8px; border: 1px solid #ccc;"
+            onchange="updatePlan()">
+            <% parkingLots.forEach(lot => { %>
+              <option 
+                value="<%= lot._id %>" 
+                data-plan="<%= lot.plan %>"
+                <%= lot._id.equals(reservation.parkingLot) ? 'selected' : '' %>>
+                <%= lot.classType %> - #<%= lot.lotID %> (<%= lot.hotel.name %>)
+              </option>
+            <% }) %>
+          </select>
+        </div>
+  
+        <!-- Spot Number -->
+        <div class="form-group" style="margin-bottom: 15px;">
+          <label for="spotNumber" style="font-weight: bold;">Spot Number</label>
+          <input 
+            type="text" 
+            id="spotNumber" 
+            name="spotNumber" 
+            value="<%= reservation.spotNumber %>"
+            class="form-control" 
+            required 
+            style="padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
+        </div>
+  
+        <!-- Plan ($/hour) -->
+        <div class="form-group" style="margin-bottom: 15px;">
+          <label for="plan" style="font-weight: bold;">Plan ($/hour)</label>
+          <input 
+            type="number" 
+            id="plan" 
+            name="plan" 
+            value="<%= reservation.plan %>" 
+            min="0.1" 
+            step="0.01" 
+            class="form-control" 
+            required 
+            readonly
+            style="padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
+        </div>
+  
+        <!-- Check-in Date -->
+        <div class="form-group" style="margin-bottom: 15px;">
+          <label for="checkIn" style="font-weight: bold;">Check-in Date & Time</label>
+          <input 
+            type="datetime-local" 
+            id="checkIn" 
+            name="checkIn" 
+            value="<%= new Date(reservation.checkIn).toISOString().slice(0, 16) %>"
+            class="form-control" 
+            required 
+            style="padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
+        </div>
+  
+        <!-- Check-out Date -->
+        <div class="form-group" style="margin-bottom: 15px;">
+          <label for="checkOut" style="font-weight: bold;">Check-out Date & Time</label>
+          <input 
+            type="datetime-local" 
+            id="checkOut" 
+            name="checkOut" 
+            value="<%= new Date(reservation.checkOut).toISOString().slice(0, 16) %>"
+            class="form-control" 
+            required 
+            style="padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
+        </div>
+  
+        <!-- Status -->
+        <div class="form-group" style="margin-bottom: 20px;">
+          <label for="status" style="font-weight: bold;">Status</label>
+          <select 
+            id="status" 
+            name="status" 
+            class="form-control" 
+            required 
+            style="padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
+            <option value="Active" <%= reservation.status === 'Active' ? 'selected' : '' %>>Active</option>
+            <option value="Completed" <%= reservation.status === 'Completed' ? 'selected' : '' %>>Completed</option>
+            <option value="Cancelled" <%= reservation.status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+          </select>
+        </div>
+  
+        <!-- Submit Button -->
+        <div style="text-align: center;">
+          <button 
+            type="submit" 
+            class="btn btn-success" 
+            style="background-color: #1cc88a; padding: 12px 25px; border-radius: 8px; color: #fff; font-size: 1rem; font-weight: bold; border: none;">
+            Update Reservation
+          </button>
+        </div>
+      </form>
+  
+    </div>
+  </main>
+  
+  <!-- JavaScript to auto-update Plan field -->
+  <script>
+    function updatePlan() {
+      const selectedLot = document.getElementById('parkingLot');
+      const selectedOption = selectedLot.options[selectedLot.selectedIndex];
+      const planValue = selectedOption.getAttribute('data-plan');
+      document.getElementById('plan').value = planValue;
+    }
+  </script>
+  

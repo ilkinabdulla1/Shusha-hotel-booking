@@ -1,0 +1,124 @@
+<main style="min-height: 100vh; background-color: #f4f6f9; padding: 40px; display: flex; justify-content: center; align-items: flex-start;">
+  <div style="width: 100%; max-width: 1300px; background-color: #fff; padding: 40px; border-radius: 8px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);">
+    
+    <!-- Page Header -->
+    <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #e0e0e0;">
+      <h1 style="font-size: 1.8rem; font-weight: 600; color: #2d3436;">Room Management</h1>
+      <a href="/hotel-booking/rooms/add-room" style="background-color: #0056b3; padding: 10px 20px; border-radius: 5px; color: #fff; font-size: 0.9rem; text-decoration: none; font-weight: 500;">
+        + Add Room
+      </a>
+    </header>
+
+    <!-- Filters, Search, and Sort -->
+    <section style="display: flex; justify-content: space-between; gap: 15px; margin-bottom: 25px;">
+      <input type="text" id="searchRoomInput" placeholder="Search by room number or hotel..." onkeyup="searchRooms()" 
+             style="flex-grow: 1; padding: 10px 15px; border-radius: 5px; border: 1px solid #ccc; font-size: 0.95rem;">
+      
+      <select id="sortRoomDropdown" onchange="sortRooms()" 
+              style="padding: 10px 15px; border-radius: 5px; border: 1px solid #ccc; width: 220px; font-size: 0.95rem;">
+        <option value="" disabled selected>Sort By</option>
+        <option value="price-asc">Price (Low to High)</option>
+        <option value="price-desc">Price (High to Low)</option>
+        <option value="status">Status</option>
+      </select>
+    </section>
+
+    <!-- Rooms Table -->
+    <section>
+      <% if (rooms.length > 0) { %>
+        <table id="roomsTable" style="width: 100%; border-collapse: collapse; background-color: #fff; border-radius: 5px; overflow: hidden; font-size: 0.95rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+          <thead style="background-color: #f0f0f0; color: #333;">
+            <tr>
+              <th style="padding: 12px; text-align: center;">Image</th>
+              <th style="padding: 12px; text-align: left;">Hotel</th>
+              <th style="padding: 12px; text-align: left;">Room Number</th>
+              <th style="padding: 12px; text-align: left;">Type</th>
+              <th style="padding: 12px; text-align: right;">Price</th>
+              <th style="padding: 12px; text-align: left;">Bed Type</th>
+              <th style="padding: 12px; text-align: center;">Status</th>
+              <th style="padding: 12px; text-align: center;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% rooms.forEach(room => { %>
+              <tr onclick="navigateToRoom('<%= room._id %>')" 
+                  style="border-bottom: 1px solid #e9ecef; cursor: pointer; transition: background-color 0.2s;" 
+                  onmouseover="this.style.backgroundColor='#f8f9fa';" 
+                  onmouseout="this.style.backgroundColor='#fff';">
+                  
+                <td style="padding: 12px; text-align: center;">
+                  <img src="<%= room.image || '/images/default-room.png' %>" 
+                       alt="Room Image" 
+                       style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;">
+                </td>
+                <td style="padding: 12px;"><%= room.hotel ? room.hotel.name : 'No Hotel Assigned' %></td>
+                <td style="padding: 12px;"><%= room.roomNumber %></td>
+                <td style="padding: 12px;"><%= room.type %></td>
+                <td style="padding: 12px; text-align: right;">$<%= room.price.toFixed(2) %></td>
+                <td style="padding: 12px;"><%= room.bedType %></td>
+                <td style="padding: 12px; text-align: center;">
+                  <% if (room.status === 'Available') { %>
+                    <span style="color: #28a745; font-weight: 600;">Available</span>
+                  <% } else if (room.status === 'Occupied') { %>
+                    <span style="color: #17a2b8; font-weight: 600;">Occupied</span>
+                  <% } else { %>
+                    <span style="color: #dc3545; font-weight: 600;">Out of Service</span>
+                  <% } %>
+                </td>
+                <td style="padding: 12px; text-align: center;">
+                  <a href="/hotel-booking/rooms/<%= room._id %>/edit" onclick="event.stopPropagation();" 
+                     style="margin-right: 10px; color: #007bff; text-decoration: none;">Edit</a>
+                  <a href="/hotel-booking/rooms/<%= room._id %>/delete" onclick="event.stopPropagation();" 
+                     style="color: #dc3545; text-decoration: none;">Delete</a>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      <% } else { %>
+        <p style="text-align: center; color: #6c757d; font-size: 1rem; padding: 20px;">No rooms available.</p>
+      <% } %>
+    </section>
+  </div>
+</main>
+
+
+
+<script>
+  // Navigate to room details when a row is clicked
+  function navigateToRoom(roomId) {
+    window.location.href = `/hotel-booking/rooms/${roomId}`;
+  }
+
+  // Search Functionality
+  function searchRooms() {
+    const input = document.getElementById("searchRoomInput").value.toLowerCase();
+    const rows = document.querySelectorAll("#roomsTable tbody tr");
+
+    rows.forEach(row => {
+      const text = Array.from(row.children)
+        .map(cell => cell.textContent.toLowerCase())
+        .join(' ');
+      row.style.display = text.includes(input) ? '' : 'none';
+    });
+  }
+
+  // Sort Functionality
+  function sortRooms() {
+    const dropdown = document.getElementById("sortRoomDropdown");
+    const sortValue = dropdown.value;
+    const rows = Array.from(document.querySelectorAll("#roomsTable tbody tr"));
+
+    if (sortValue === "price-asc") {
+      rows.sort((a, b) => parseFloat(a.children[4].textContent.replace('$', '')) - parseFloat(b.children[4].textContent.replace('$', '')));
+    } else if (sortValue === "price-desc") {
+      rows.sort((a, b) => parseFloat(b.children[4].textContent.replace('$', '')) - parseFloat(a.children[4].textContent.replace('$', '')));
+    } else if (sortValue === "status") {
+      rows.sort((a, b) => a.children[6].textContent.localeCompare(b.children[6].textContent));
+    }
+
+    const tbody = document.querySelector("#roomsTable tbody");
+    tbody.innerHTML = "";
+    rows.forEach(row => tbody.appendChild(row));
+  }
+</script>

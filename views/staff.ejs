@@ -1,0 +1,127 @@
+<main style="min-height: 100vh; background-color: #f4f6f9; padding: 40px; display: flex; justify-content: center; align-items: flex-start;">
+  <div style="width: 100%; max-width: 1300px; background-color: #fff; padding: 40px; border-radius: 8px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);">
+    
+    <!-- Page Header -->
+    <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #e0e0e0;">
+      <h1 style="font-size: 1.8rem; font-weight: 600; color: #2d3436;">Staff Management</h1>
+      <a href="/hotel-booking/staff/add-staff" style="background-color: #0056b3; padding: 10px 20px; border-radius: 5px; color: #fff; font-size: 0.9rem; text-decoration: none; font-weight: 500;">
+        + Add Staff
+      </a>
+    </header>
+
+    <!-- Filters, Search, and Sort -->
+    <section style="display: flex; justify-content: space-between; gap: 15px; margin-bottom: 25px;">
+      <input type="text" id="searchInput" placeholder="Search staff by name or role..." onkeyup="searchStaff()" 
+             style="flex-grow: 1; padding: 10px 15px; border-radius: 5px; border: 1px solid #ccc; font-size: 0.95rem;">
+      
+      <select id="sortDropdown" onchange="sortStaff()" 
+              style="padding: 10px 15px; border-radius: 5px; border: 1px solid #ccc; width: 220px; font-size: 0.95rem;">
+        <option value="" disabled selected>Sort By</option>
+        <option value="name-asc">Name (A-Z)</option>
+        <option value="name-desc">Name (Z-A)</option>
+        <option value="status">Status</option>
+      </select>
+    </section>
+
+    <!-- Staff Table -->
+    <section>
+      <% if (staffList.length > 0) { %>
+        <table id="staffTable" style="width: 100%; border-collapse: collapse; background-color: #fff; border-radius: 5px; overflow: hidden; font-size: 0.95rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+          <thead style="background-color: #f0f0f0; color: #333;">
+            <tr>
+              <th style="padding: 12px; text-align: center;">Profile</th>
+              <th style="padding: 12px; text-align: left;">Name</th>
+              <th style="padding: 12px; text-align: left;">Role</th>
+              <th style="padding: 12px; text-align: left;">Hotel</th>
+              <th style="padding: 12px; text-align: left;">Schedule</th>
+              <th style="padding: 12px; text-align: left;">Join Date</th>
+              <th style="padding: 12px; text-align: center;">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% staffList.forEach(staff => { %>
+              <tr onclick="navigateToStaff('<%= staff._id %>')" 
+                  style="border-bottom: 1px solid #e9ecef; cursor: pointer; transition: background-color 0.2s;" 
+                  onmouseover="this.style.backgroundColor='#f8f9fa';" 
+                  onmouseout="this.style.backgroundColor='#fff';">
+                  
+                <td style="padding: 12px; text-align: center;">
+                  <img src="<%= staff.profilePhoto || '/images/default-profile.png' %>" alt="Profile Photo" 
+                       style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
+                </td>
+
+                <td style="padding: 12px; font-weight: 500;"><%= staff.name %></td>
+                <td style="padding: 12px;"><%= staff.role || 'N/A' %></td>
+                <td style="padding: 12px;"><%= staff.hotel?.name || 'N/A' %></td>
+
+                <td style="padding: 12px;">
+                  <% 
+                    const days = Array.isArray(staff.schedule?.days) ? staff.schedule.days : [];
+                    const formattedDays = days.length > 0 
+                      ? days.map(day => day.substring(0, 3)).join(', ') 
+                      : 'N/A';
+                  %>
+                  <strong><%= formattedDays %></strong><br>
+                  <small><%= staff.schedule?.time || 'N/A' %></small>
+                </td>
+
+                <td style="padding: 12px;"><%= staff.joinDate ? new Date(staff.joinDate).toLocaleDateString() : 'N/A' %></td>
+                <td style="padding: 12px; text-align: center;">
+                  <% if (staff.status === 'Active') { %>
+                    <span style="color: #28a745; font-weight: 600;">Active</span>
+                  <% } else { %>
+                    <span style="color: #dc3545; font-weight: 600;">Inactive</span>
+                  <% } %>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      <% } else { %>
+        <p style="text-align: center; color: #6c757d; font-size: 1rem; padding: 20px;">No staff members available.</p>
+      <% } %>
+    </section>
+  </div>
+</main>
+
+
+
+
+<script>
+  // Navigate to staff details when a row is clicked
+  function navigateToStaff(staffId) {
+    window.location.href = `/hotel-booking/staff/${staffId}`;
+  }
+
+  // Search Functionality
+  function searchStaff() {
+    const input = document.getElementById("searchInput").value.toLowerCase();
+    const rows = document.querySelectorAll("#staffTable tbody tr");
+
+    rows.forEach(row => {
+      const text = Array.from(row.children)
+        .map(cell => cell.textContent.toLowerCase())
+        .join(' ');
+      row.style.display = text.includes(input) ? '' : 'none';
+    });
+  }
+
+  // Sort Functionality
+  function sortStaff() {
+    const dropdown = document.getElementById("sortDropdown");
+    const sortValue = dropdown.value;
+    const rows = Array.from(document.querySelectorAll("#staffTable tbody tr"));
+
+    if (sortValue === "name-asc") {
+      rows.sort((a, b) => a.children[1].textContent.localeCompare(b.children[1].textContent));
+    } else if (sortValue === "name-desc") {
+      rows.sort((a, b) => b.children[1].textContent.localeCompare(a.children[1].textContent));
+    } else if (sortValue === "status") {
+      rows.sort((a, b) => a.children[6].textContent.localeCompare(b.children[6].textContent));
+    }
+
+    const tbody = document.querySelector("#staffTable tbody");
+    tbody.innerHTML = "";
+    rows.forEach(row => tbody.appendChild(row));
+  }
+</script>

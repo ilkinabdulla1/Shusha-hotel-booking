@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title><%= typeof title !== 'undefined' ? title : "Skydash Admin" %></title>
+
+  <!-- Plugins: CSS -->
+  <link rel="stylesheet" href="/vendors/feather/feather.css">
+  <link rel="stylesheet" href="/vendors/ti-icons/css/themify-icons.css">
+  <link rel="stylesheet" href="/vendors/css/vendor.bundle.base.css">
+
+  <!-- Plugin CSS for this page -->
+  <link rel="stylesheet" href="/vendors/datatables.net-bs4/dataTables.bootstrap4.css">
+  <link rel="stylesheet" type="text/css" href="/js/select.dataTables.min.css">
+
+  <!-- Injected CSS -->
+  <link rel="stylesheet" href="/css/vertical-layout-light/style.css">
+
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="/images/favicon.png">
+</head>
+
+<body>
+  <div class="container-scroller">
+    <!-- Navbar -->
+    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+        <a class="navbar-brand brand-logo mr-5" href="/dashboard">
+          <img src="/images/logo.png" class="mr-2" alt="logo">
+        </a>
+        <a class="navbar-brand brand-logo-mini" href="/dashboard">
+          <img src="/images/logo-mini.png" alt="logo">
+        </a>
+      </div>
+      <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+        <!-- Add navbar content here -->
+      </div>
+    </nav>
+
+    <!-- Page Body -->
+    <div class="container-fluid page-body-wrapper d-flex">
+
+      <!-- Sidebar Navigation -->
+      <nav class="sidebar sidebar-offcanvas" id="sidebar" style="background-color: #343a40; color: #ffffff; width: 250px; flex-shrink: 0; overflow-y: auto;">
+        <ul class="nav">
+          <!-- Dashboard -->
+          <li class="nav-item">
+            <a class="nav-link" href="/dashboard">
+              <i class="icon-grid menu-icon" style="color: #ffffff;"></i>
+              <span class="menu-title">Dashboard</span>
+            </a>
+          </li>
+
+          <!-- Hotel Booking -->
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#hotel-booking" aria-expanded="false" aria-controls="hotel-booking">
+              <i class="ti-home menu-icon" style="color: #ffffff;"></i>
+              <span class="menu-title">Hotel Booking</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="hotel-booking">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item">
+                  <a class="nav-link" href="/hotel-booking/bookings">Bookings</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/hotel-booking/rooms">Rooms</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/hotel-booking/customers">Customers</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/hotel-booking/staff">Staff</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/hotel-booking/reports">Reports</a>
+                </li>
+              </ul>
+            </div>
+          </li>
+
+          <!-- Parking -->
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#parking-management" aria-expanded="false" aria-controls="parking-management">
+              <i class="ti-car menu-icon" style="color: #ffffff;"></i>
+              <span class="menu-title">Parking Management</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="parking-management">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item">
+                  <a class="nav-link" href="/parking-management/parkings">Parkings</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/parking-management/reservations">Reservations</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/parking-management/vehicles">Vehicles</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/parking-management/reports">Reports</a>
+                </li>
+              </ul>
+            </div>
+          </li>
+
+          <!-- Transportation -->
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#transportation" aria-expanded="false" aria-controls="transportation">
+              <i class="ti-truck menu-icon" style="color: #ffffff;"></i>
+              <span class="menu-title">Transportation</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="transportation">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item">
+                  <a class="nav-link" href="/transportation/busses">Busses</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/transportation/routes">Routes</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/transportation/schedule">Schedule</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/transportation/drivers">Drivers</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/transportation/ticketing">Ticketing</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/transportation/reports">Reports</a>
+                </li>
+              </ul>
+            </div>
+          </li>
+
+          <!-- Profile -->
+          <li class="nav-item">
+            <a class="nav-link" href="/profile">
+              <i class="ti-user menu-icon" style="color: #ffffff;"></i>
+              <span class="menu-title">Profile</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Main Panel -->
+      <div class="main-panel" style="flex-grow: 1; min-height: 100vh;">
+        <!-- Placeholder for dynamic content -->
+        <main class="main-content" style="padding: 20px;">
+          <%- body %>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <!-- Plugins: JS -->
+  <script src="/vendors/js/vendor.bundle.base.js"></script>
+
+  <!-- Injected Scripts -->
+  <script src="/js/off-canvas.js"></script>
+  <script src="/js/hoverable-collapse.js"></script>
+  <script src="/js/template.js"></script>
+  <script src="/js/settings.js"></script>
+  <script src="/js/todolist.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

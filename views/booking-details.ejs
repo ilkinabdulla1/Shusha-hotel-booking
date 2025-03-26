@@ -1,0 +1,83 @@
+<main style="min-height: 100vh; background-color: #f4f6f9; padding: 40px; display: flex; justify-content: center; align-items: flex-start;">
+  <div style="width: 100%; max-width: 1200px; background-color: #fff; padding: 40px; border-radius: 10px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);">
+
+    <!-- Page Header -->
+    <header style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid #e0e0e0; margin-bottom: 30px;">
+      <h1 style="font-size: 2rem; font-weight: 600; color: #2d3436;">Booking Details</h1>
+    </header>
+
+    <!-- Grid Layout for Sections -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+
+      <!-- Guest Information -->
+      <section style="background-color: #f9fafb; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+        <h3 style="font-size: 1.3rem; font-weight: 600; color: #333; margin-bottom: 15px;">👤 Guest Information</h3>
+        <p><strong>Full Name:</strong> <%= booking.guestName || 'N/A' %></p>
+        <p><strong>Email:</strong> <%= booking.guestEmail || 'N/A' %></p>
+        <p><strong>Phone:</strong> <%= booking.guestPhone || 'N/A' %></p>
+        <p><strong>Adults:</strong> <%= booking.adults || 0 %></p>
+        <p><strong>Children:</strong> <%= booking.children || 0 %></p>
+      </section>
+
+      <!-- Booking Information -->
+      <section style="background-color: #f9fafb; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+        <h3 style="font-size: 1.3rem; font-weight: 600; color: #333; margin-bottom: 15px;">🏨 Booking Information</h3>
+        <p><strong>Hotel:</strong> <%= booking.room?.hotel?.name || 'N/A' %></p>
+        <p><strong>Room Number:</strong> <%= booking.room?.roomNumber || 'N/A' %></p>
+        <p><strong>Room Type:</strong> <%= booking.room?.type || 'N/A' %></p>
+        <p><strong>Bed Type:</strong> <%= booking.room?.bedType || 'N/A' %></p>
+        <p><strong>Facilities:</strong> 
+          <% if (booking.room?.facilities?.length > 0) { %>
+            <%= booking.room.facilities.join(', ') %>
+          <% } else { %> N/A <% } %>
+        </p>
+      </section>
+
+    </div>
+
+    <!-- Second Row: Stay Details & Payment -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+
+      <!-- Stay Details -->
+      <section style="background-color: #f9fafb; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+        <h3 style="font-size: 1.3rem; font-weight: 600; color: #333; margin-bottom: 15px;">🛏️ Stay Details</h3>
+        <p><strong>Check-in:</strong> <%= new Date(booking.checkInDate).toLocaleDateString() %></p>
+        <p><strong>Check-out:</strong> <%= new Date(booking.checkOutDate).toLocaleDateString() %></p>
+        <p><strong>Nights:</strong> 
+          <% const nights = Math.ceil((new Date(booking.checkOutDate) - new Date(booking.checkInDate)) / (1000 * 60 * 60 * 24)); %>
+          <%= nights %> Night(s)
+        </p>
+      </section>
+
+      <!-- Payment Information -->
+      <section style="background-color: #f9fafb; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+        <h3 style="font-size: 1.3rem; font-weight: 600; color: #333; margin-bottom: 15px;">💳 Payment Details</h3>
+        <p><strong>Payment Method:</strong> <%= booking.paymentMethod || 'N/A' %></p>
+        <p><strong>Total Amount:</strong> $<%= booking.totalAmount?.toFixed(2) || '0.00' %></p>
+        <p><strong>Status:</strong> 
+          <% if (booking.status === 'Active') { %>
+            <span style="color: #28a745; font-weight: 600;">Active</span>
+          <% } else if (booking.status === 'Completed') { %>
+            <span style="color: #17a2b8; font-weight: 600;">Completed</span>
+          <% } else { %>
+            <span style="color: #dc3545; font-weight: 600;">Cancelled</span>
+          <% } %>
+        </p>
+      </section>
+
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="text-align: right; margin-top: 30px;">
+      <a href="/hotel-booking/bookings/<%= booking._id %>/edit" style="background-color: #007BFF; padding: 10px 20px; border-radius: 6px; color: #fff; text-decoration: none; margin-right: 10px;">
+        Edit
+      </a>
+      <form action="/hotel-booking/bookings/<%= booking._id %>/delete" method="POST" style="display: inline;">
+        <button type="submit" onclick="return confirm('Are you sure you want to delete this booking?');" style="background-color: #dc3545; padding: 10px 20px; border-radius: 6px; color: #fff; border: none;">
+          Delete
+        </button>
+      </form>
+    </div>
+
+  </div>
+</main>

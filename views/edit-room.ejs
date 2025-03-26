@@ -1,0 +1,124 @@
+<main style="min-height: 100vh; background-color: #eef2f7; padding: 40px; display: flex; justify-content: center; align-items: flex-start;">
+  <div style="width: 100%; max-width: 800px; background-color: #ffffff; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+
+    <h2 style="text-align: center; font-size: 2.2rem; font-weight: 700; color: #333; margin-bottom: 25px;">Edit Room</h2>
+    <p style="text-align: center; font-size: 1.1rem; color: #666; margin-bottom: 30px;">Update the details below to edit the room.</p>
+
+    <form action="/hotel-booking/rooms/<%= room._id %>/edit" method="POST" enctype="multipart/form-data">
+
+      <!-- Hotel Selection -->
+      <div style="margin-bottom: 20px;">
+        <label for="hotel" style="display: block; font-size: 1rem; font-weight: 600; margin-bottom: 5px;">Select Hotel</label>
+        <select id="hotel" name="hotel" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc;">
+          <option value="" disabled>Select Hotel</option>
+          
+          <% hotels.forEach(hotel => { %>
+            <option value="<%= hotel._id %>" <%= hotel._id.toString() === room.hotel._id.toString() ? 'selected' : '' %>>
+              <%= hotel.name %>
+            </option>
+          <% }) %>
+        </select>
+      </div>
+
+      <!-- Room Number -->
+      <div style="margin-bottom: 20px;">
+        <label for="roomNumber" style="display: block; font-size: 1rem; font-weight: 600; margin-bottom: 5px;">Room Number</label>
+        <input type="text" id="roomNumber" name="roomNumber" value="<%= room.roomNumber %>" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc;">
+      </div>
+
+      <!-- Room Image -->
+      <div style="margin-bottom: 20px;">
+        <label for="image" style="display: block; font-size: 1rem; font-weight: 600; margin-bottom: 5px;">Upload New Room Image (Optional)</label>
+        <input type="file" id="image" name="image" accept="image/*" style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #ccc;">
+
+        <% if (room.image && room.image !== '') { %>
+          <p style="margin-top: 10px;">
+            Current Image:
+            <img src="/uploads/rooms/<%= room.image %>" alt="Room Image"
+                style="width: 150px; height: auto; border-radius: 5px; object-fit: cover; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+          </p>
+        <% } else { %>
+          <p style="margin-top: 10px; color: #888;">No image uploaded for this room.</p>
+        <% } %>
+      </div>
+
+      <!-- Room Type -->
+      <div style="margin-bottom: 20px;">
+        <label for="type" style="display: block; font-size: 1rem; font-weight: 600; margin-bottom: 5px;">Room Type</label>
+        <select id="type" name="type" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc;">
+          <option value="Single" <%= room.type === 'Single' ? 'selected' : '' %>>Single</option>
+          <option value="Double" <%= room.type === 'Double' ? 'selected' : '' %>>Double</option>
+          <option value="Suite" <%= room.type === 'Suite' ? 'selected' : '' %>>Suite</option>
+        </select>
+      </div>
+
+      <!-- Bed Type -->
+      <div style="margin-bottom: 20px;">
+        <label for="bedType" style="display: block; font-size: 1rem; font-weight: 600; margin-bottom: 5px;">Bed Type</label>
+        <select id="bedType" name="bedType" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc;">
+          <option value="Single Bed" <%= room.bedType === 'Single Bed' ? 'selected' : '' %>>Single Bed</option>
+          <option value="Double Bed" <%= room.bedType === 'Double Bed' ? 'selected' : '' %>>Double Bed</option>
+          <option value="Queen Bed" <%= room.bedType === 'Queen Bed' ? 'selected' : '' %>>Queen Bed</option>
+          <option value="King Bed" <%= room.bedType === 'King Bed' ? 'selected' : '' %>>King Bed</option>
+        </select>
+      </div>
+
+      <!-- Price per Night -->
+      <div style="margin-bottom: 20px;">
+        <label for="price" style="display: block; font-size: 1rem; font-weight: 600; margin-bottom: 5px;">Price per Night ($)</label>
+        <input type="number" id="price" name="price" value="<%= room.price %>" step="0.01" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc;">
+      </div>
+
+      <!-- Room Size (sq meters) -->
+      <div style="margin-bottom: 20px;">
+        <label for="roomSize" style="display: block; font-size: 1rem; font-weight: 600; margin-bottom: 5px;">Room Size (sq meters)</label>
+        <input type="number" id="roomSize" name="roomSize" value="<%= room.roomSize %>" step="0.01" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc;">
+      </div>
+
+      <!-- Room Description -->
+      <div style="margin-bottom: 20px;">
+        <label for="description" style="display: block; font-size: 1rem; font-weight: 600; margin-bottom: 5px;">Room Description</label>
+        <textarea id="description" name="description" rows="4" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc;"><%= room.description %></textarea>
+      </div>
+
+<!-- Facilities -->
+<div style="margin-bottom: 20px;">
+  <label style="display: block; font-size: 1rem; font-weight: 600; margin-bottom: 5px;">Facilities</label>
+  <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+    <% const allFacilities = ["WiFi", "TV", "Air Conditioning", "Mini Bar", "Room Service", "Private Balcony", "Gym Access"]; %>
+
+    <% allFacilities.forEach(facility => { %>
+      <label>
+        <input 
+          type="checkbox" 
+          name="facilities" 
+          value="<%= facility %>"
+          <%= room.facilities && room.facilities.includes(facility) ? 'checked' : '' %> 
+        >
+        <%= facility %>
+      </label>
+    <% }) %>
+  </div>
+</div>
+
+
+      <!-- Room Status -->
+      <div style="margin-bottom: 30px;">
+        <label for="status" style="display: block; font-size: 1rem; font-weight: 600; margin-bottom: 5px;">Room Status</label>
+        <select id="status" name="status" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc;">
+          <option value="Available" <%= room.status === 'Available' ? 'selected' : '' %>>Available</option>
+          <option value="Occupied" <%= room.status === 'Occupied' ? 'selected' : '' %>>Occupied</option>
+          <option value="Out of Service" <%= room.status === 'Out of Service' ? 'selected' : '' %>>Out of Service</option>
+        </select>
+      </div>
+
+      <!-- Submit Button -->
+      <div style="text-align: center;">
+        <button type="submit" style="background-color: #007BFF; padding: 12px 25px; border-radius: 8px; color: #fff; font-size: 1rem; font-weight: bold; border: none;">
+          Update Room
+        </button>
+      </div>
+
+    </form>
+  </div>
+</main>

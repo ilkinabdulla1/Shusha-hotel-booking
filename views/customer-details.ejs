@@ -1,0 +1,85 @@
+<main style="min-height: 100vh; background-color: #f4f6f9; padding: 40px; display: flex; justify-content: center; align-items: flex-start;">
+  <div style="width: 100%; max-width: 1000px; background-color: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+
+    <!-- Page Header -->
+    <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #e0e0e0;">
+      <h1 style="font-size: 2.2rem; font-weight: 700; color: #2c3e50;">Customer Details</h1>
+    </header>
+
+    <!-- Personal Information -->
+    <section style="margin-bottom: 40px; padding: 30px; background-color: #f8f9fa; border-radius: 10px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">
+      <h3 style="font-size: 1.5rem; font-weight: bold; color: #2c3e50; margin-bottom: 15px;">👤 Personal Information</h3>
+      <p><strong>Name:</strong> <%= customer.name %></p>
+      <p><strong>Email:</strong> <%= customer.email %></p>
+      <p><strong>Phone:</strong> <%= customer.phone %></p>
+      <p><strong>Status:</strong> 
+        <% if (customer.status === 'Active') { %>
+          <span style="color: #28a745; font-weight: bold;">Active</span>
+        <% } else { %>
+          <span style="color: #dc3545; font-weight: bold;">Inactive</span>
+        <% } %>
+      </p>
+    </section>
+
+    <!-- Room & Booking Information -->
+    <section style="margin-bottom: 40px; padding: 30px; background-color: #f8f9fa; border-radius: 10px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">
+      <h3 style="font-size: 1.5rem; font-weight: bold; color: #2c3e50; margin-bottom: 15px;">🏨 Room & Booking Information</h3>
+      <p><strong>Hotel:</strong> <%= customer.room?.hotel?.name || 'N/A' %></p>
+      <p><strong>Room Number:</strong> <%= customer.room?.roomNumber || 'N/A' %></p>
+      <p><strong>Room Type:</strong> <%= customer.room?.type || 'N/A' %></p>
+      <p><strong>Bed Type:</strong> <%= customer.room?.bedType || 'N/A' %></p>
+      <p><strong>Price per Night:</strong> $<%= customer.room ? customer.room.price.toFixed(2) : '0.00' %></p>
+      <p><strong>Check-in Date:</strong> <%= customer.checkInDate ? new Date(customer.checkInDate).toLocaleDateString() : 'N/A' %></p>
+      <p><strong>Check-out Date:</strong> <%= customer.checkOutDate ? new Date(customer.checkOutDate).toLocaleDateString() : 'N/A' %></p>
+    </section>
+
+    <!-- Booking History -->
+    <% if (customer.bookings && customer.bookings.length > 0) { %>
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 1.5rem; font-weight: bold; color: #2c3e50; margin-bottom: 15px;">📖 Booking History</h3>
+        <table style="width: 100%; border-collapse: collapse; background-color: #fff; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+          <thead style="background-color: #1cc88a; color: #fff;">
+            <tr>
+              <th style="padding: 12px;">Room Number</th>
+              <th style="padding: 12px;">Hotel</th>
+              <th style="padding: 12px;">Check-in Date</th>
+              <th style="padding: 12px;">Check-out Date</th>
+              <th style="padding: 12px;">Status</th>
+              <th style="padding: 12px;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% customer.bookings.forEach(booking => { %>
+              <tr style="border-bottom: 1px solid #ddd;">
+                <td style="padding: 12px;"><%= booking.room?.roomNumber || 'N/A' %></td>
+                <td style="padding: 12px;"><%= booking.room?.hotel?.name || 'N/A' %></td>
+                <td style="padding: 12px;"><%= new Date(booking.checkInDate).toLocaleDateString() %></td>
+                <td style="padding: 12px;"><%= new Date(booking.checkOutDate).toLocaleDateString() %></td>
+                <td style="padding: 12px;">
+                  <% if (booking.status === 'Active') { %>
+                    <span style="color: #28a745; font-weight: bold;">Active</span>
+                  <% } else if (booking.status === 'Completed') { %>
+                    <span style="color: #17a2b8; font-weight: bold;">Completed</span>
+                  <% } else { %>
+                    <span style="color: #dc3545; font-weight: bold;">Cancelled</span>
+                  <% } %>
+                </td>
+                <td style="padding: 12px; text-align: center;">
+                  <a href="/hotel-booking/bookings/<%= booking._id %>" style="color: #1cc88a; text-decoration: none; font-weight: bold;">View</a>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </section>
+    <% } else { %>
+      <p style="text-align: center; color: #999;">No booking history available.</p>
+    <% } %>
+
+    <!-- Action Buttons -->
+    <div style="text-align: center; margin-top: 30px;">
+      <a href="/hotel-booking/customers/<%= customer._id %>/edit" style="background-color: #007bff; padding: 10px 20px; border-radius: 6px; color: #fff; text-decoration: none; margin-right: 10px;">Edit</a>
+      <a href="/hotel-booking/customers/<%= customer._id %>/delete" style="background-color: #dc3545; padding: 10px 20px; border-radius: 6px; color: #fff; text-decoration: none;">Delete</a>
+    </div>
+  </div>
+</main>

@@ -1,0 +1,109 @@
+<main style="min-height: 100vh; background-color: #f4f6f9; padding: 40px; display: flex; justify-content: center; align-items: flex-start;">
+  <div style="width: 100%; max-width: 1200px; background-color: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); overflow: hidden;">
+    
+    <!-- Hotel Banner Image -->
+    <div style="width: 100%; height: 400px; overflow: hidden; border-radius: 12px; margin-bottom: 30px;">
+      <img src="<%= hotel.image ? '/uploads/hotels/' + hotel.image : '/images/default-hotel.png' %>" alt="Hotel Image" style="width: 100%; height: 100%; object-fit: cover;">
+    </div>
+
+    <!-- Hotel Name -->
+    <h2 style="text-align: center; font-size: 2.8rem; font-weight: 700; color: #2c3e50; margin-bottom: 30px;">
+      <%= hotel.name %>
+    </h2>
+
+    <!-- Hotel General Details -->
+    <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 40px;">
+      <div><strong> Location:</strong> <%= hotel.location %></div>
+      <div><strong> Rating:</strong> <%= hotel.rating || 'N/A' %> ★</div>
+      <div><strong> Phone:</strong> <%= hotel.phone || 'N/A' %></div>
+      <div><strong> Email:</strong> <%= hotel.email || 'N/A' %></div>
+      <div><strong>Status:</strong> <span style="color: <%= hotel.status === 'Open' ? '#28a745' : '#dc3545' %>; font-weight: bold;"><%= hotel.status %></span></div>
+    </section>
+
+    <!-- Hotel Description -->
+    <section style="margin-bottom: 40px; padding: 30px; background-color: #f8f9fa; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+      <h3 style="font-size: 1.8rem; font-weight: bold; color: #2c3e50; margin-bottom: 15px;">Description</h3>
+      <p style="font-size: 1.1rem; color: #555; line-height: 1.8;"><%= hotel.description || 'No description available.' %></p>
+    </section>
+
+    <!-- Hotel Facilities -->
+    <section style="margin-bottom: 40px; padding: 30px; background-color: #f8f9fa; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+      <h3 style="font-size: 1.8rem; font-weight: bold; color: #2c3e50; margin-bottom: 15px;">Facilities</h3>
+      <% if (hotel.facilities && hotel.facilities.length > 0) { %>
+        <ul style="list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 12px;">
+          <% hotel.facilities.forEach(facility => { %>
+            <li style="background-color: #e9ecef; padding: 10px 20px; border-radius: 20px; font-size: 1rem; color: #495057; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+              <%= facility %>
+            </li>
+          <% }) %>
+        </ul>
+      <% } else { %>
+        <p style="font-size: 1.1rem; color: #555;">No facilities listed.</p>
+      <% } %>
+    </section>
+
+    <!-- Associated Rooms -->
+    <% if (rooms && rooms.length > 0) { %>
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 1.8rem; font-weight: bold; color: #000; margin-bottom: 15px;">Rooms in this Hotel</h3>
+        <table style="width: 100%; border-collapse: collapse; background-color: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+          <thead style="background-color: #f0f0f0; color: #333;">
+            <tr>
+              <th style="padding: 12px;">Room Number</th>
+              <th style="padding: 12px;">Type</th>
+              <th style="padding: 12px;">Bed Type</th>
+              <th style="padding: 12px;">Price/Night</th>
+              <th style="padding: 12px;">Status</th>
+              <th style="padding: 12px; text-align: center;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% rooms.forEach(room => { %>
+              <tr style="border-bottom: 1px solid #ddd;">
+                <td style="padding: 12px;"><%= room.roomNumber %></td>
+                <td style="padding: 12px;"><%= room.type %></td>
+                <td style="padding: 12px;"><%= room.bedType %></td>
+                <td style="padding: 12px;">$<%= room.price.toFixed(2) %></td>
+                <td style="padding: 12px;"><span style="color: <%= room.status === 'Available' ? '#28a745' : '#6c757d' %>; font-weight: bold;"><%= room.status %></span></td>
+                <td style="padding: 12px; text-align: center;"><a href="/hotel-booking/rooms/<%= room._id %>" style="color: #1c44c8; font-weight: bold;">View</a></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </section>
+    <% } %>
+
+    <!-- Booking History -->
+    <% if (bookingHistory && bookingHistory.length > 0) { %>
+      <section style="margin-top: 30px;">
+        <h3 style="font-size: 1.8rem; font-weight: bold;">Booking History</h3>
+        <table style="width: 100%; border-collapse: collapse; background-color: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+          <thead style="background-color: #f0f0f0; color: #333;">
+            <tr>
+              <th>Guest Name</th>
+              <th>Room Number</th>
+              <th>Check-in</th>
+              <th>Check-out</th>
+              <th>Total Price</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% bookingHistory.forEach(booking => { %>
+              <tr>
+                <td><%= booking.guestName %></td>
+                <td><%= booking.room?.roomNumber || 'N/A' %></td>
+                <td><%= new Date(booking.checkInDate).toLocaleDateString() %></td>
+                <td><%= new Date(booking.checkOutDate).toLocaleDateString() %></td>
+                <td>$<%= booking.totalAmount?.toFixed(2) %></td>
+                <td><span style="color: <%= booking.status === 'Active' ? 'green' : 'blue' %>;"><%= booking.status %></span></td>
+                <td><a href="/hotel-booking/bookings/<%= booking._id %>">View</a></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </section>
+    <% } %>
+  </div>
+</main>

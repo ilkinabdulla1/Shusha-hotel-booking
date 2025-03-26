@@ -1,0 +1,108 @@
+<main style="min-height: 100vh; background-color: #f4f6f9; padding: 40px; display: flex; justify-content: center; align-items: flex-start;">
+    <div style="width: 100%; max-width: 1300px; background-color: #fff; padding: 40px; border-radius: 8px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);">
+  
+      <!-- Page Header -->
+      <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #e0e0e0;">
+        <h1 style="font-size: 1.8rem; font-weight: 600; color: #2d3436;">Parking Reservations</h1>
+        <a href="/parking-management/reservations/add" style="background-color: #0056b3; padding: 10px 20px; border-radius: 5px; color: #fff; font-size: 0.9rem; text-decoration: none; font-weight: 500;">
+          + New Reservation
+        </a>
+      </header>
+  
+      <!-- Filters, Search, and Sort -->
+      <section style="display: flex; justify-content: space-between; gap: 15px; margin-bottom: 25px;">
+        <input type="text" id="searchReservationInput" placeholder="Search by customer or lot..." onkeyup="searchReservations()" 
+               style="flex-grow: 1; padding: 10px 15px; border-radius: 5px; border: 1px solid #ccc; font-size: 0.95rem;">
+  
+        <select id="sortReservationDropdown" onchange="sortReservations()" 
+                style="padding: 10px 15px; border-radius: 5px; border: 1px solid #ccc; width: 220px; font-size: 0.95rem;">
+          <option value="" disabled selected>Sort By</option>
+          <option value="checkin-asc">Check-in (Earliest First)</option>
+          <option value="checkin-desc">Check-in (Latest First)</option>
+          <option value="price-desc">Total Price (High to Low)</option>
+          <option value="price-asc">Total Price (Low to High)</option>
+          <option value="status">Status</option>
+        </select>
+      </section>
+  
+      <!-- Reservations Table -->
+      <section>
+        <% if (reservations.length > 0) { %>
+          <table style="width: 100%; border-collapse: collapse; background-color: #fff; border-radius: 5px; overflow: hidden; font-size: 0.95rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+            <thead style="background-color: #f0f0f0; color: #333;">
+              <tr>
+                <th style="padding: 12px; text-align: left;">ID</th>
+                <th style="padding: 12px; text-align: left;">Customer Name</th>
+                <th style="padding: 12px; text-align: left;">Plate</th>
+                <th style="padding: 12px; text-align: left;">Spot Number</th>
+                <th style="padding: 12px; text-align: left;">Parking Lot</th>
+                <th style="padding: 12px; text-align: left;">Check-In</th>
+                <th style="padding: 12px; text-align: left;">Check-Out</th>
+                <th style="padding: 12px; text-align: right;">Total Price ($)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% reservations.forEach(reservation => { %>
+                <tr onclick="navigateToReservation('<%= reservation._id %>')" 
+                    style="border-bottom: 1px solid #e9ecef; cursor: pointer; transition: background-color 0.2s;" 
+                    onmouseover="this.style.backgroundColor='#f8f9fa';" 
+                    onmouseout="this.style.backgroundColor='#fff';">
+  
+                  <td style="padding: 12px;">#<%= reservation.reservationID %></td>
+                  <td style="padding: 12px;"><%= reservation.customerName || 'N/A' %></td>
+                  <td style="padding: 12px; white-space: nowrap;"><%= reservation.numberPlate || 'N/A' %></td>
+                  <td style="padding: 12px;"><%= reservation.spotNumber || 'N/A' %></td>
+                  <td style="padding: 12px;"><%= reservation.parkingLot?.classType %> - #<%= reservation.parkingLot?.lotID %></td>
+                  <td style="padding: 12px;"><%= new Date(reservation.checkIn).toLocaleString() %></td>
+                  <td style="padding: 12px;"><%= new Date(reservation.checkOut).toLocaleString() %></td>
+                  <td style="padding: 12px; text-align: right;">$<%= reservation.totalPrice?.toFixed(2) %></td>
+
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        <% } else { %>
+          <p style="text-align: center; color: #6c757d; font-size: 1rem; padding: 20px;">No reservations available.</p>
+        <% } %>
+      </section>
+  
+    </div>
+  </main>
+  
+  <!-- JavaScript for Search and Sort -->
+  <script>
+    // Navigate to Reservation Details
+    function navigateToReservation(reservationId) {
+      window.location.href = `/parking-management/reservations/${reservationId}/details`;
+    }
+  
+    // Search Functionality
+    function searchReservations() {
+      const input = document.getElementById("searchReservationInput").value.toLowerCase();
+      const rows = document.querySelectorAll("tbody tr");
+  
+      rows.forEach((row) => {
+        const text = Array.from(row.children)
+          .map((cell) => cell.textContent.toLowerCase())
+          .join(" ");
+        row.style.display = text.includes(input) ? "" : "none";
+      });
+    }
+  
+    // Sorting Functionality
+    function sortReservations() {
+      const dropdown = document.getElementById("sortReservationDropdown").value;
+      const tbody = document.querySelector("tbody");
+      const rows = Array.from(tbody.querySelectorAll("tr"));
+  
+      if (dropdown === "checkin-asc") {
+        rows.sort((a, b) => new Date(a.children[5].textContent) - new Date(b.children[5].textContent));
+      } else if (dropdown === "price-desc") {
+        rows.sort((a, b) => parseFloat(b.children[7].textContent) - parseFloat(a.children[7].textContent));
+      }
+  
+      tbody.innerHTML = "";
+      rows.forEach(row => tbody.appendChild(row));
+    }
+  </script>
+  

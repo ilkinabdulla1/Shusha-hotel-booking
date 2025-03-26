@@ -1,0 +1,145 @@
+<main style="min-height: 100vh; background-color: #f4f6f9; padding: 40px; display: flex; justify-content: center; align-items: flex-start;">
+  <div style="width: 100%; max-width: 1300px; background-color: #fff; padding: 40px; border-radius: 8px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);">
+
+    <!-- Page Header -->
+    <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #e0e0e0;">
+      <h1 style="font-size: 1.8rem; font-weight: 600; color: #2d3436;">Parking Lot Management</h1>
+      <a href="/parking-management/parkings/add" style="background-color: #0056b3; padding: 10px 20px; border-radius: 5px; color: #fff; font-size: 0.9rem; text-decoration: none; font-weight: 500;">
+        + Add Parking Lot
+      </a>
+    </header>
+
+    <!-- Filters, Search, and Sort -->
+    <section style="display: flex; justify-content: space-between; gap: 15px; margin-bottom: 25px;">
+      <input type="text" id="searchParkingInput" placeholder="Search by ID or Hotel..." onkeyup="searchParkings()" 
+             style="flex-grow: 1; padding: 10px 15px; border-radius: 5px; border: 1px solid #ccc; font-size: 0.95rem;">
+      
+      <select id="sortParkingDropdown" onchange="sortParkings()" 
+              style="padding: 10px 15px; border-radius: 5px; border: 1px solid #ccc; width: 220px; font-size: 0.95rem;">
+        <option value="" disabled selected>Sort By</option>
+        <option value="status">Status</option>
+        <option value="revenue-desc">Revenue (High to Low)</option>
+        <option value="revenue-asc">Revenue (Low to High)</option>
+        <option value="available-desc">Available Spots (High to Low)</option>
+        <option value="available-asc">Available Spots (Low to High)</option>
+      </select>
+    </section>
+
+<!-- Parking Lots Table -->
+<section>
+  <% if (parkings.length > 0) { %>
+    <table style="width: 100%; border-collapse: collapse; background-color: #fff; border-radius: 5px; overflow: hidden; font-size: 0.95rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+      <thead style="background-color: #f0f0f0; color: #333;">
+        <tr>
+          <th style="padding: 12px; text-align: left;">ID</th>
+          <th style="padding: 12px; text-align: left;">Class</th>
+          <th style="padding: 12px; text-align: left;">Hotel</th>
+          <th style="padding: 12px; text-align: right;">Total Spots</th>
+          <th style="padding: 12px; text-align: right;">Occupied</th>
+          <th style="padding: 12px; text-align: right;">Available</th>
+          <th style="padding: 12px; text-align: right;">Plan ($/hour)</th>
+          <th style="padding: 12px; text-align: right;">Revenue ($)</th>
+          <th style="padding: 12px; text-align: center;">Status</th>
+          <th style="padding: 12px; text-align: center;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% parkings.forEach(parking => { %>
+          <tr onclick="navigateToParking('<%= parking._id %>')" 
+              style="border-bottom: 1px solid #e9ecef; cursor: pointer; transition: background-color 0.2s;" 
+              onmouseover="this.style.backgroundColor='#f8f9fa';" 
+              onmouseout="this.style.backgroundColor='#fff';">
+
+            <!-- Lot ID -->
+            <td style="padding: 12px;"><%= parking.lotID %></td>
+
+            <!-- Parking Class -->
+            <td style="padding: 12px;"><%= parking.classType || 'Standard' %></td>
+
+            <!-- Hotel Name -->
+            <td style="padding: 12px;"><%= parking.hotel ? parking.hotel.name : 'N/A' %></td>
+
+            <!-- Total Spots -->
+            <td style="padding: 12px; text-align: right;"><%= parking.totalSpots %></td>
+
+            <!-- Occupied Spots -->
+            <td style="padding: 12px; text-align: right;"><%= parking.occupiedSpots %></td>
+
+            <!-- Available Spots -->
+            <td style="padding: 12px; text-align: right;"><%= parking.totalSpots - parking.occupiedSpots %></td>
+
+            <!-- Plan ($/hour) -->
+            <td style="padding: 12px; text-align: right;">$<%= parking.plan?.toFixed(2) %></td>
+
+            <!-- Revenue -->
+            <td style="padding: 12px; text-align: right;">$<%= parking.revenue?.toFixed(2) %></td>
+
+            <!-- Status -->
+            <td style="padding: 12px; text-align: center;">
+              <% if (parking.status === 'Open') { %>
+                <span style="color: #28a745; font-weight: 600;">Open</span>
+              <% } else if (parking.status === 'Closed') { %>
+                <span style="color: #dc3545; font-weight: 600;">Closed</span>
+              <% } else { %>
+                <span style="color: #ffc107; font-weight: 600;">Maintenance</span>
+              <% } %>
+            </td>
+
+            <!-- Action Buttons -->
+            <td style="padding: 12px; text-align: center;">
+              <a href="/parking-management/parkings/<%= parking._id %>/edit" onclick="event.stopPropagation();" 
+                 style="margin-right: 10px; color: #007bff; text-decoration: none;">Edit</a>
+              <a href="/parking-management/parkings/<%= parking._id %>/delete" onclick="event.stopPropagation();" 
+                 style="color: #dc3545; text-decoration: none;">Delete</a>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } else { %>
+    <p style="text-align: center; color: #6c757d; font-size: 1rem; padding: 20px;">No parking lots available.</p>
+  <% } %>
+</section>
+
+  </div>
+</main>
+
+<!-- JavaScript for Search and Sort -->
+<script>
+  // Navigate to Parking Lot Details
+  function navigateToParking(parkingId) {
+    window.location.href = `/parking-management/parkings/${parkingId}`;
+  }
+
+  // Search Functionality
+  function searchParkings() {
+    const input = document.getElementById("searchParkingInput").value.toLowerCase();
+    const rows = document.querySelectorAll("tbody tr");
+
+    rows.forEach((row) => {
+      const text = Array.from(row.children)
+        .map((cell) => cell.textContent.toLowerCase())
+        .join(" ");
+      row.style.display = text.includes(input) ? "" : "none";
+    });
+  }
+
+  // Sorting Functionality
+  function sortParkings() {
+    const dropdown = document.getElementById("sortParkingDropdown");
+    const sortValue = dropdown.value;
+    const tbody = document.querySelector("tbody");
+    const rows = Array.from(tbody.querySelectorAll("tr"));
+
+    if (sortValue === "revenue-desc") {
+      rows.sort((a, b) => parseFloat(b.children[7].textContent) - parseFloat(a.children[7].textContent));
+    } else if (sortValue === "revenue-asc") {
+      rows.sort((a, b) => parseFloat(a.children[7].textContent) - parseFloat(b.children[7].textContent));
+    } else if (sortValue === "status") {
+      rows.sort((a, b) => a.children[8].textContent.localeCompare(b.children[8].textContent));
+    }
+
+    tbody.innerHTML = "";
+    rows.forEach((row) => tbody.appendChild(row));
+  }
+</script>

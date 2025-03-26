@@ -1,0 +1,84 @@
+<main class="main-content" style="min-height: 100vh; background-color: #f0f4f8; padding: 40px; display: flex; justify-content: center; align-items: flex-start;">
+  <div style="width: 100%; max-width: 1000px; background-color: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+    
+    <!-- Page Header -->
+    <header style="text-align: center; margin-bottom: 40px; border-bottom: 2px solid #e3e6f0; padding-bottom: 20px;">
+      <h1 style="font-size: 2.5rem; font-weight: 700; color: #2c3e50;">Staff Details</h1>
+    </header>
+
+    <!-- Profile Section -->
+    <section style="display: flex; align-items: center; gap: 25px; margin-bottom: 40px;">
+      <div style="flex-shrink: 0;">
+        <img src="<%= staff.profilePhoto || '/images/default-profile.png' %>" 
+             alt="Profile Photo" 
+             style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%; border: 3px solid #1cc88a;">
+      </div>
+      <div>
+        <h2 style="font-size: 2rem; margin-bottom: 5px; color: #2d3436;"><%= staff.name %></h2>
+        <p style="font-size: 1rem; color: #6c757d;"><strong>Role:</strong> <%= staff.role || 'N/A' %></p>
+        <p style="font-size: 1rem; color: #6c757d;"><strong>Badge Number:</strong> <%= staff.badgeNumber || 'N/A' %></p>
+        <p style="font-size: 1rem; color: #6c757d;"><strong>Status:</strong>
+          <% if (staff.status === 'Active') { %>
+            <span style="color: #28a745; font-weight: bold;">Active</span>
+          <% } else { %>
+            <span style="color: #dc3545; font-weight: bold;">Inactive</span>
+          <% } %>
+        </p>
+      </div>
+    </section>
+
+    <!-- Personal Information -->
+    <section style="margin-bottom: 30px; padding: 20px; background-color: #f8f9fa; border-radius: 8px;">
+      <h3 style="font-size: 1.5rem; color: #2c3e50; margin-bottom: 15px;">Personal Information</h3>
+      <p><strong>Date of Birth:</strong> <%= staff.dateOfBirth ? new Date(staff.dateOfBirth).toLocaleDateString() : 'N/A' %></p>
+      <p><strong>National ID Number:</strong> <%= staff.nationalId || 'N/A' %></p>
+      <p><strong>Access Level:</strong> <%= staff.accessLevel || 'N/A' %></p>
+    </section>
+
+    <!-- Contact Information -->
+    <section style="margin-bottom: 30px; padding: 20px; background-color: #f8f9fa; border-radius: 8px;">
+      <h3 style="font-size: 1.5rem; color: #2c3e50; margin-bottom: 15px;">Contact Information</h3>
+      <p><strong>Phone:</strong> <%= staff.contact || 'N/A' %></p>
+      <p><strong>Email:</strong> <%= staff.email || 'N/A' %></p>
+      <p><strong>Address:</strong> <%= staff.address || 'N/A' %></p>
+    </section>
+
+    <!-- Work Information -->
+    <section style="margin-bottom: 30px; padding: 20px; background-color: #f8f9fa; border-radius: 8px;">
+      <h3 style="font-size: 1.5rem; color: #2c3e50; margin-bottom: 15px;">Work Information</h3>
+      <p><strong>Works at:</strong> <%= staff.hotel?.name || 'N/A' %></p>
+      <p><strong>Salary:</strong> $<%= staff.salary ? staff.salary.toFixed(2) : 'N/A' %> / month</p>
+    </section>
+
+    <!-- Work Schedule -->
+    <section style="margin-bottom: 30px; padding: 20px; background-color: #f8f9fa; border-radius: 8px;">
+      <h3 style="font-size: 1.5rem; color: #2c3e50; margin-bottom: 15px;">Work Schedule</h3>
+      <% 
+        const dayAbbreviations = { Monday: 'Mon', Tuesday: 'Tue', Wednesday: 'Wed', Thursday: 'Thu', Friday: 'Fri', Saturday: 'Sat', Sunday: 'Sun' };
+        const days = Array.isArray(staff.schedule?.days) ? staff.schedule.days : [];
+        const formattedDays = days.length > 0 ? days.map(day => dayAbbreviations[day] || day).join(', ') : 'N/A';
+      %>
+      <p><strong>Days:</strong> <%= formattedDays %></p>
+      <p><strong>Time:</strong> <%= staff.schedule?.time || 'N/A' %></p>
+    </section>
+
+    <!-- Joining Details -->
+    <section style="margin-bottom: 30px; padding: 20px; background-color: #f8f9fa; border-radius: 8px;">
+      <h3 style="font-size: 1.5rem; color: #2c3e50; margin-bottom: 15px;">Joining Details</h3>
+      <p><strong>Joined On:</strong> <%= staff.joinDate ? new Date(staff.joinDate).toLocaleDateString() : 'N/A' %></p>
+    </section>
+
+    <!-- Action Buttons -->
+    <div style="text-align: center; margin-top: 30px;">
+      <a href="/hotel-booking/staff/<%= staff._id %>/edit" 
+         style="background-color: #1cc88a; padding: 12px 30px; border-radius: 8px; color: #fff; text-decoration: none; font-weight: bold; margin-right: 10px;">
+         Edit Staff
+      </a>
+      <a href="/hotel-booking/staff/<%= staff._id %>/delete" 
+         style="background-color: #e74a3b; padding: 12px 30px; border-radius: 8px; color: #fff; text-decoration: none; font-weight: bold;">
+         Delete Staff
+      </a>
+    </div>
+
+  </div>
+</main>

@@ -1,0 +1,89 @@
+<main style="min-height: 100vh; background-color: #eef2f7; padding: 40px; display: flex; justify-content: center; align-items: center;">
+  <div style="width: 100%; max-width: 900px; background-color: #ffffff; padding: 50px; border-radius: 12px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);">
+    
+    <!-- Page Header -->
+    <div style="text-align: center; margin-bottom: 40px;">
+      <h1 style="font-size: 2.8rem; font-weight: bold; color: #2c3e50;">Add New Hotel</h1>
+    </div>
+
+    <!-- Add Hotel Form -->
+    <form action="/hotel-booking/hotels/add-hotel" method="POST" enctype="multipart/form-data">
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <!-- Hotel Name -->
+        <div>
+          <label for="name" style="font-weight: bold;">Hotel Name</label>
+          <input type="text" id="name" name="name" placeholder="Enter Hotel Name" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc;">
+        </div>
+
+        <!-- Location -->
+        <div>
+          <label for="location" style="font-weight: bold;">Location</label>
+          <input type="text" id="location" name="location" placeholder="Enter Location" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc;">
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+        <!-- Rating -->
+        <div>
+          <label for="rating" style="font-weight: bold;">Rating</label>
+          <input type="number" step="0.1" max="5" min="0" id="rating" name="rating" placeholder="0 - 5" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc;">
+        </div>
+
+        <!-- Status -->
+        <div>
+          <label for="status" style="font-weight: bold;">Status</label>
+          <select id="status" name="status" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc;">
+            <option value="Open">Open</option>
+            <option value="Closed">Closed</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div style="margin-top: 20px;">
+        <label for="email" style="font-weight: bold;">Hotel Email</label>
+        <input type="email" id="email" name="email" placeholder="example@hotel.com" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc;">
+      </div>
+
+      <!-- Phone -->
+      <div style="margin-top: 20px;">
+        <label for="phone" style="font-weight: bold;">Hotel Phone</label>
+        <input type="tel" id="phone" name="phone" placeholder="+1234567890" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc;">
+      </div>
+
+      <!-- Description -->
+      <div style="margin-top: 20px;">
+        <label for="description" style="font-weight: bold;">Hotel Description</label>
+        <textarea id="description" name="description" rows="4" placeholder="Enter hotel description..." style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc;"></textarea>
+      </div>
+
+      <!-- Facilities -->
+      <div style="margin-top: 20px;">
+        <label for="facilities" style="font-weight: bold;">Facilities</label>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px; padding: 15px; background-color: #f8f9fa; border-radius: 8px; border: 1px solid #ccc;">
+          <% const facilitiesList = ["WiFi", "Parking", "Swimming Pool", "Spa", "Gym", "Restaurant"]; %>
+          <% facilitiesList.forEach(facility => { %>
+            <div style="display: flex; align-items: center; gap: 5px;">
+              <input type="checkbox" id="<%= facility %>" name="facilities" value="<%= facility %>">
+              <label for="<%= facility %>"><%= facility %></label>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+
+      <!-- Upload Image -->
+      <div style="margin-top: 20px;">
+        <label for="image" style="font-weight: bold;">Upload Image</label>
+        <input type="file" id="image" name="image" accept="image/*" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc;">
+      </div>
+
+      <!-- Submit Button -->
+      <div style="margin-top: 30px; text-align: center;">
+        <button type="submit" style="background-color: #1cc88a; padding: 12px 25px; border-radius: 8px; color: #fff; font-size: 1rem; font-weight: bold; border: none;">
+          Add Hotel
+        </button>
+      </div>
+    </form>
+  </div>
+</main>

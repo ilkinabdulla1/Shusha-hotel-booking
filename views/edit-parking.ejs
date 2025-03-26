@@ -1,0 +1,131 @@
+<main class="main-content" style="min-height: 100vh; background-color: #f5f7fa; padding: 20px;">
+  <div class="container" style="max-width: 700px; background-color: #ffffff; padding: 40px; border-radius: 15px; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);">
+
+    <!-- Page Header -->
+    <div style="text-align: center; margin-bottom: 30px;">
+      <h1 style="font-size: 2.2rem; font-weight: bold; color: #333;">Edit Parking Lot</h1>
+    </div>
+
+    <!-- Edit Parking Form -->
+    <form action="/parking-management/parkings/<%= parking._id %>/edit" method="POST">
+      
+      <!-- Lot ID -->
+      <div class="form-group" style="margin-bottom: 15px;">
+        <label for="lotID" style="font-weight: bold;">Lot ID</label>
+        <input 
+          type="text" 
+          id="lotID" 
+          name="lotID" 
+          class="form-control" 
+          value="<%= parking.lotID %>" 
+          required 
+          style="padding: 10px; border-radius: 8px; border: 1px solid #ccc;" 
+          readonly>
+      </div>
+
+      <!-- Hotel Selection -->
+      <div class="form-group" style="margin-bottom: 15px;">
+        <label for="hotel" style="font-weight: bold;">Select Hotel</label>
+        <select 
+          id="hotel" 
+          name="hotel" 
+          class="form-control" 
+          required 
+          style="padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
+          
+          <% hotels.forEach(hotel => { %>
+            <option value="<%= hotel._id %>" 
+              <%= String(hotel._id) === String(parking.hotel._id) ? 'selected' : '' %>>
+              <%= hotel.name %>
+            </option>
+          <% }) %>
+        </select>
+      </div>
+
+      <!-- Parking Class -->
+      <div class="form-group" style="margin-bottom: 15px;">
+        <label for="classType" style="font-weight: bold;">Parking Class</label>
+        <select 
+          id="classType" 
+          name="classType" 
+          class="form-control" 
+          required 
+          style="padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
+          <option value="VIP" <%= parking.classType === 'VIP' ? 'selected' : '' %>>VIP</option>
+          <option value="Standard" <%= parking.classType === 'Standard' ? 'selected' : '' %>>Standard</option>
+          <option value="Economy" <%= parking.classType === 'Economy' ? 'selected' : '' %>>Economy</option>
+        </select>
+      </div>
+
+      <!-- Total Spots -->
+      <div class="form-group" style="margin-bottom: 15px;">
+        <label for="totalSpots" style="font-weight: bold;">Total Spots</label>
+        <input 
+          type="number" 
+          id="totalSpots" 
+          name="totalSpots" 
+          min="1" 
+          class="form-control" 
+          value="<%= parking.totalSpots %>" 
+          required 
+          style="padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
+      </div>
+
+      <!-- Plan ($/hour) -->
+      <div class="form-group" style="margin-bottom: 15px;">
+        <label for="plan" style="font-weight: bold;">Pricing Plan ($/hour)</label>
+        <input 
+          type="number" 
+          id="plan" 
+          name="plan" 
+          min="0" 
+          step="0.01" 
+          class="form-control" 
+          value="<%= parking.plan %>" 
+          required 
+          style="padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
+      </div>
+
+      <!-- Status -->
+      <div class="form-group" style="margin-bottom: 15px;">
+        <label for="status" style="font-weight: bold;">Status</label>
+        <select 
+          id="status" 
+          name="status" 
+          class="form-control" 
+          required 
+          style="padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
+          <option value="Open" <%= parking.status === 'Open' ? 'selected' : '' %>>Open</option>
+          <option value="Closed" <%= parking.status === 'Closed' ? 'selected' : '' %>>Closed</option>
+          <option value="Under Maintenance" <%= parking.status === 'Under Maintenance' ? 'selected' : '' %>>Under Maintenance</option>
+        </select>
+      </div>
+
+      <!-- Current Revenue (Read-only) -->
+      <div class="form-group" style="margin-bottom: 15px;">
+        <label for="revenue" style="font-weight: bold;">Current Revenue ($)</label>
+        <input 
+          type="number" 
+          id="revenue" 
+          name="revenue" 
+          min="0" 
+          step="0.01" 
+          class="form-control" 
+          value="<%= parking.revenue.toFixed(2) %>" 
+          readonly 
+          style="padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
+      </div>
+
+      <!-- Submit Button -->
+      <div style="text-align: center;">
+        <button 
+          type="submit" 
+          class="btn btn-warning" 
+          style="background-color: #FF9800; padding: 12px 25px; border-radius: 8px; color: #fff; font-weight: bold;">
+          Update Parking Lot
+        </button>
+      </div>
+    </form>
+
+  </div>
+</main>

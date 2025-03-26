@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Meta Tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title><%= typeof title !== 'undefined' ? title : "Admin Dashboard" %></title>
+
+  <!-- Plugins: CSS -->
+  <link rel="stylesheet" href="/vendors/feather/feather.css">
+  <link rel="stylesheet" href="/vendors/ti-icons/css/themify-icons.css">
+  <link rel="stylesheet" href="/vendors/css/vendor.bundle.base.css">
+
+  <!-- Plugin CSS for this page -->
+  <link rel="stylesheet" href="/vendors/datatables.net-bs4/dataTables.bootstrap4.css">
+  <link rel="stylesheet" href="/js/select.dataTables.min.css">
+
+  <!-- Custom CSS for Sidebar -->
+  <style>
+    /* Sidebar Background */
+    .sidebar {
+      background-color: #1e1e2f;
+      color: #ffffff;
+      width: 250px;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      overflow-y: auto;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+    }
+
+    /* Sidebar Logo */
+    .sidebar-logo {
+      text-align: center;
+      padding: 20px 0;
+      border-bottom: 1px solid #2c2f3f;
+    }
+
+    .sidebar-logo img {
+      width: 120px;
+      height: auto;
+    }
+
+    /* Sidebar Links */
+    .sidebar .nav-link {
+      color: #c0c5d1;
+      font-weight: 500;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .sidebar .nav-link i {
+      font-size: 1.2rem;
+    }
+
+    /* Active and Hover States */
+    .sidebar .nav-link.active,
+    .sidebar .nav-link:hover {
+      background-color: #4b7bec;
+      color: #ffffff;
+      border-radius: 8px;
+    }
+
+    /* Main Content */
+    .main-panel {
+      margin-left: 250px;
+      background-color: #f5f7fa;
+      padding: 20px;
+      min-height: 100vh;
+    }
+  </style>
+
+  <!-- Injected CSS -->
+  <link rel="stylesheet" href="/css/vertical-layout-light/style.css">
+
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="/images/favicon.png">
+</head>
+
+
+<body>
+  <div class="container-scroller">
+
+    
+    <!-- Sidebar with Logo -->
+    <nav class="sidebar sidebar-offcanvas" id="sidebar">
+      
+      <!-- Sidebar Logo -->
+      <div class="sidebar-logo">
+        <a href="/dashboard">
+          <img src="/images/logo.png" alt="TechTrade Solutions Logo">
+        </a>
+      </div>
+
+      <!-- Sidebar Navigation -->
+      <ul class="nav">
+
+        <!-- Dashboard -->
+        <li class="nav-item">
+          <a class="nav-link" href="/dashboard">
+            <i class="ti-dashboard menu-icon"></i>
+            <span class="menu-title">Dashboard</span>
+          </a>
+        </li>        
+
+        <!-- Hotel Booking Pages -->
+        <li class="nav-item">
+          <a class="nav-link" href="/hotel-booking/bookings">
+            <i class="ti-book menu-icon"></i>
+            <span class="menu-title">Bookings</span>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="/hotel-booking/hotels">
+            <i class="ti-home menu-icon"></i>
+            <span class="menu-title">Hotels</span>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="/hotel-booking/rooms">
+            <i class="ti-layout menu-icon"></i>
+            <span class="menu-title">Rooms</span>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="/hotel-booking/customers">
+            <i class="ti-user menu-icon"></i>
+            <span class="menu-title">Customers</span>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="/hotel-booking/staff">
+            <i class="ti-id-badge menu-icon"></i>
+            <span class="menu-title">Staff</span>
+          </a>
+        </li>
+
+        <!-- Parking Management Pages -->
+        <li class="nav-item">
+          <a class="nav-link" href="/parking-management/parkings">
+            <i class="ti-car menu-icon"></i>
+            <span class="menu-title">Parkings</span>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="/parking-management/reservations">
+            <i class="ti-bookmark menu-icon"></i>
+            <span class="menu-title">Reservations</span>
+          </a>
+        </li>
+
+      </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-panel">
+      <main class="main-content">
+        <%- body %>
+      </main>
+    </div>
+
+  </div>
+
+  <!-- Plugins: JS -->
+  <script src="/vendors/js/vendor.bundle.base.js"></script>
+  <script src="/js/off-canvas.js"></script>
+  <script src="/js/hoverable-collapse.js"></script>
+  <script src="/js/template.js"></script>
+  <script src="/js/settings.js"></script>
+  <script src="/js/todolist.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,138 @@
+<main style="min-height: 100vh; background-color: #f4f6f9; padding: 40px; display: flex; justify-content: center; align-items: flex-start;">
+  <div style="width: 100%; max-width: 1300px; background-color: #fff; padding: 40px; border-radius: 8px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);">
+    
+    <!-- Page Header -->
+    <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #e0e0e0;">
+      <h1 style="font-size: 1.8rem; font-weight: 600; color: #2d3436;">Booking Management</h1>
+      <a href="/hotel-booking/bookings/add-booking" style="background-color: #0056b3; padding: 10px 20px; border-radius: 5px; color: #fff; font-size: 0.9rem; text-decoration: none; font-weight: 500;">
+        + Add Booking
+      </a>
+    </header>
+
+    <!-- Filters, Search, and Sort -->
+    <section style="display: flex; justify-content: space-between; gap: 15px; margin-bottom: 25px;">
+      <input type="text" id="searchBookingInput" placeholder="Search by guest or hotel..." onkeyup="searchBookings()" 
+             style="flex-grow: 1; padding: 10px 15px; border-radius: 5px; border: 1px solid #ccc; font-size: 0.95rem;">
+      
+      <select id="sortBookingDropdown" onchange="sortBookings()" 
+              style="padding: 10px 15px; border-radius: 5px; border: 1px solid #ccc; width: 220px; font-size: 0.95rem;">
+        <option value="" disabled selected>Sort By</option>
+        <option value="checkin-asc">Check-in (Earliest First)</option>
+        <option value="checkin-desc">Check-in (Latest First)</option>
+        <option value="checkout-asc">Check-out (Earliest First)</option>
+        <option value="checkout-desc">Check-out (Latest First)</option>
+        <option value="status">Status</option>
+      </select>
+    </section>
+
+    <!-- Bookings Table -->
+    <section>
+      <% if (bookings.length > 0) { %>
+        <table style="width: 100%; border-collapse: collapse; background-color: #fff; border-radius: 5px; overflow: hidden; font-size: 0.95rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+          <thead style="background-color: #f0f0f0; color: #333;">
+            <tr>
+              <th style="padding: 12px; text-align: left;">Guest Name</th>
+              <th style="padding: 12px; text-align: left;">Hotel</th>
+              <th style="padding: 12px; text-align: left;">Room Number</th>
+              <th style="padding: 12px; text-align: left;">Check-in</th>
+              <th style="padding: 12px; text-align: left;">Check-out</th>
+              <th style="padding: 12px; text-align: right;">Total Amount</th>
+              <th style="padding: 12px; text-align: center;">Status</th>
+              <th style="padding: 12px; text-align: center;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% bookings.forEach(booking => { %>
+              <tr onclick="navigateToBooking('<%= booking._id %>')" 
+                  style="border-bottom: 1px solid #e9ecef; cursor: pointer; transition: background-color 0.2s;" 
+                  onmouseover="this.style.backgroundColor='#f8f9fa';" 
+                  onmouseout="this.style.backgroundColor='#fff';">
+                  
+                <td style="padding: 12px;"><%= booking.guestName %></td>
+                <td style="padding: 12px;"><%= booking.room?.hotel?.name || 'N/A' %></td>
+                <td style="padding: 12px;"><%= booking.room?.roomNumber || 'N/A' %></td>
+                <td style="padding: 12px;"><%= new Date(booking.checkInDate).toLocaleDateString() %></td>
+                <td style="padding: 12px;"><%= new Date(booking.checkOutDate).toLocaleDateString() %></td>
+                <td style="padding: 12px; text-align: right;">$<%= booking.totalAmount?.toFixed(2) %></td>
+                <td style="padding: 12px; text-align: center;">
+                  <% if (booking.status === 'Active') { %>
+                    <span style="color: #28a745; font-weight: 600;">Active</span>
+                  <% } else if (booking.status === 'Completed') { %>
+                    <span style="color: #17a2b8; font-weight: 600;">Completed</span>
+                  <% } else { %>
+                    <span style="color: #dc3545; font-weight: 600;">Cancelled</span>
+                  <% } %>
+                </td>
+                <td style="padding: 12px; text-align: center;">
+                  <a href="/hotel-booking/bookings/<%= booking._id %>/edit" onclick="event.stopPropagation();" 
+                     style="margin-right: 10px; color: #007bff; text-decoration: none;">Edit</a>
+                  <a href="/hotel-booking/bookings/<%= booking._id %>/delete" onclick="event.stopPropagation();" 
+                     style="color: #dc3545; text-decoration: none;">Delete</a>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      <% } else { %>
+        <p style="text-align: center; color: #6c757d; font-size: 1rem; padding: 20px;">No bookings available.</p>
+      <% } %>
+    </section>
+  </div>
+</main>
+
+
+
+
+<script>
+  // Function to navigate to the booking details page when a row is clicked
+  function navigateToBooking(bookingId) {
+    window.location.href = `/hotel-booking/bookings/${bookingId}`;
+  }
+
+  // Search Functionality
+  function searchBookings() {
+    const input = document.getElementById("searchBookingInput").value.toLowerCase();
+    const rows = document.querySelectorAll("tbody tr");
+
+    rows.forEach((row) => {
+      const text = Array.from(row.children)
+        .map((cell) => cell.textContent.toLowerCase())
+        .join(" ");
+      row.style.display = text.includes(input) ? "" : "none";
+    });
+  }
+
+  // Sorting Functionality
+  function sortBookings() {
+    const dropdown = document.getElementById("sortBookingDropdown");
+    const sortValue = dropdown.value;
+    const tbody = document.querySelector("tbody");
+    const rows = Array.from(tbody.querySelectorAll("tr"));
+
+    if (sortValue === "checkin-asc") {
+      rows.sort((a, b) => new Date(a.children[3].textContent) - new Date(b.children[3].textContent));
+    } else if (sortValue === "checkin-desc") {
+      rows.sort((a, b) => new Date(b.children[3].textContent) - new Date(a.children[3].textContent));
+    } else if (sortValue === "checkout-asc") {
+      rows.sort((a, b) => new Date(a.children[4].textContent) - new Date(b.children[4].textContent));
+    } else if (sortValue === "checkout-desc") {
+      rows.sort((a, b) => new Date(b.children[4].textContent) - new Date(a.children[4].textContent));
+    } else if (sortValue === "status") {
+      rows.sort((a, b) => a.children[6].textContent.localeCompare(b.children[6].textContent));
+    }
+
+    tbody.innerHTML = "";
+    rows.forEach((row) => tbody.appendChild(row));
+  }
+
+  // Prevent row click when clicking on Edit or Delete
+  document.addEventListener('DOMContentLoaded', function () {
+    const actionLinks = document.querySelectorAll('.action-link');
+
+    actionLinks.forEach(link => {
+      link.addEventListener('click', function (event) {
+        event.stopPropagation();  // Prevent the row's click event
+      });
+    });
+  });
+</script>
